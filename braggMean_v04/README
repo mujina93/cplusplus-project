@@ -1,0 +1,31 @@
+  _____                 _____  ______          _____  __  __ ______ 
+  / ____|    _     _    |  __ \|  ____|   /\   |  __ \|  \/  |  ____|
+ | |       _| |_ _| |_  | |__) | |__     /  \  | |  | | \  / | |__   
+ | |      |_   _|_   _| |  _  /|  __|   / /\ \ | |  | | |\/| |  __|  
+ | |____    |_|   |_|   | | \ \| |____ / ____ \| |__| | |  | | |____ 
+  \_____|               |_|  \_\______/_/    \_\_____/|_|  |_|______|
+                                                                     
+Author: Michele Piccolini
+Program version: braggMean04
+ _____ ________  _________ _____ _      _____ 
+/  __ \  _  |  \/  || ___ \_   _| |    |  ___|
+| /  \/ | | | .  . || |_/ / | | | |    | |__  
+| |   | | | | |\/| ||  __/  | | | |    |  __| 
+| \__/\ \_/ / |  | || |    _| |_| |____| |___ 
+ \____/\___/\_|  |_/\_|    \___/\_____/\____/ 
+To compile:
+g++ -Wall -o braggMean04 *.cc
+
+Notes: In order to be able to run the files, make sure that the file
+bragg_events.txt is present in the same directory as the exectutable.
+______ _   _ _   _ 
+| ___ \ | | | \ | |
+| |_/ / | | |  \| |
+|    /| | | | . ` |
+| |\ \| |_| | |\  |
+\_| \_|\___/\_| \_/
+To run:
+./braggMean04 bragg_events.txt
+
+Notes: The program read input events from the file bragg_events.txt.
+The program will ask you if you want to dump data or go directly to the statistical output.

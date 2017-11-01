@@ -1,0 +1,1 @@
+# C++ project for the course in C++ and Object Oriented Programming. This project is an incrementally built program for data analysis in particle physics (which uses ROOT). The final version can be found in braggPlot_v06. Each version of the project has a README file which instructs on how to compile and run the program.

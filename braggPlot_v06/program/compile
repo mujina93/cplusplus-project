@@ -1,0 +1,120 @@
+#!/bin/sh
+
+#####################################################################
+# Setto ANALYSIS_PATH sul path dove runno lo script compile
+cd `dirname $0`
+export ANALYSIS_PATH=`/bin/pwd`
+
+#####################################################################
+# Creo una libreria dinamica per ognuna delle cartelle:
+# AnalysisFramework, AnalysisObjects, AnalysisUtilities
+
+# Entra in AnalysisFramework, compila tutti i file e salvali in una
+# libreria in ANALYSIS_PATH (parent directory)
+export LIB_NAME=AnalysisFramework
+cd ${ANALYSIS_PATH}/${LIB_NAME}
+rm -f ${ANALYSIS_PATH}/lib${LIB_NAME}.so
+echo "compile " ${LIB_NAME}
+c++ -Wall -fPIC -shared -I. -I ${ANALYSIS_PATH} \
+-I ${ANALYSIS_PATH}/AnalysisUtilities \
+-o ${ANALYSIS_PATH}/lib${LIB_NAME}.so *.cc
+
+# Entra in AnalysisObjects, compila tutti i file e salvali in una
+# libreria in ANALYSIS_PATH (parent directory)
+export LIB_NAME=AnalysisObjects
+cd ${ANALYSIS_PATH}/${LIB_NAME}
+rm -f ${ANALYSIS_PATH}/lib${LIB_NAME}.so
+echo "compile " ${LIB_NAME}
+c++ -Wall -fPIC -shared -I. -I ${ANALYSIS_PATH} \
+-I ${ANALYSIS_PATH}/AnalysisFramework \
+-I ${ANALYSIS_PATH}/AnalysisUtilities \
+-o ${ANALYSIS_PATH}/lib${LIB_NAME}.so *.cc
+
+# Entra in AnalysisUtilities, compila tutti i file e salvali in una
+# libreria in ANALYSIS_PATH (parent directory)
+export LIB_NAME=AnalysisUtilities
+cd ${ANALYSIS_PATH}/${LIB_NAME}
+rm -f ${ANALYSIS_PATH}/lib${LIB_NAME}.so
+echo "compile " ${LIB_NAME}
+c++ -Wall -fPIC -shared -I. \
+-o ${ANALYSIS_PATH}/lib${LIB_NAME}.so *.cc
+
+#####################################################################
+# Creo una libreria dinamica per ognuna delle classi in AnalysisPlugins:
+# BGCalc, EnergyDist, EventDump
+
+cd ${ANALYSIS_PATH}/AnalysisPlugins
+
+export LIB_NAME=BGCalc
+rm -f ${ANALYSIS_PATH}/lib${LIB_NAME}.so
+echo "compile " ${LIB_NAME}
+c++ -Wall -fPIC -shared -I. -I ${ANALYSIS_PATH} \
+-I ${ANALYSIS_PATH}/AnalysisFramework \
+-I ${ANALYSIS_PATH}/AnalysisObjects `root-config --cflags` \
+-o ${ANALYSIS_PATH}/lib${LIB_NAME}.so ${LIB_NAME}.cc
+
+export LIB_NAME=EnergyDist
+rm -f ${ANALYSIS_PATH}/lib${LIB_NAME}.so
+echo "compile " ${LIB_NAME}
+c++ -Wall -fPIC -shared -I. -I ${ANALYSIS_PATH} \
+-I ${ANALYSIS_PATH}/AnalysisFramework \
+-I ${ANALYSIS_PATH}/AnalysisObjects \
+-I ${ANALYSIS_PATH}/AnalysisUtilities \
+`root-config --cflags` -std=c++11 \
+-o ${ANALYSIS_PATH}/lib${LIB_NAME}.so ${LIB_NAME}.cc
+
+export LIB_NAME=EventDump
+rm -f ${ANALYSIS_PATH}/lib${LIB_NAME}.so
+echo "compile " ${LIB_NAME}
+c++ -Wall -fPIC -shared -I. -I ${ANALYSIS_PATH} \
+-I ${ANALYSIS_PATH}/AnalysisFramework \
+-o ${ANALYSIS_PATH}/lib${LIB_NAME}.so ${LIB_NAME}.cc
+
+#####################################################################
+# Linko le shared libraries e creo gli eseguibili
+
+cd ${ANALYSIS_PATH}
+
+# Exe che supporta solo l'opzione dump, per stampare l'input.
+# Esegui con ./runDump input bragg_events.txt dump
+# oppure con ./runDump sim <numberOfEvents> [seed] dump
+export EXE_NAME=runDump
+rm -f ${EXE_NAME}
+echo "build and link " ${EXE_NAME}
+c++ -Wall -fPIC -I. -o ${EXE_NAME} dum.cc -L. -Wl,--no-as-needed -lAnalysisFramework -lAnalysisObjects -lAnalysisUtilities -lEventDump
+
+# Exe che supporta solo l'opzione dist <token_name>, per fare calcoli
+# statistici e per salvare istogrammi.
+# Esegui con:
+# ./runDump input bragg_events.txt ranges energyRanges dist <token_name>
+# oppure con:
+# ./runDump sim <numberOfEvents> [seed] ranges energyRanges dist <token_name>
+export EXE_NAME=runDist
+rm -f ${EXE_NAME}
+echo "build and link " ${EXE_NAME}
+c++ -Wall -fPIC -I. -o ${EXE_NAME} dum.cc -L. -Wl,--no-as-needed -lAnalysisFramework -lAnalysisObjects -lAnalysisUtilities -lEnergyDist `root-config --libs`
+
+# Exe che supporta solo l'opzione "bgcalc", per calcolare il
+# livello di background delle energie.
+# Esegui con: ./runBGCalc input bragg_events.txt bgcalc
+# oppure con: ./runBGCalc sim <numberOfEvents> [seed] bgcalc 
+export EXE_NAME=runBGCalc
+rm -f ${EXE_NAME}
+echo "build and link " ${EXE_NAME}
+c++ -Wall -fPIC -I. -o ${EXE_NAME} dum.cc -L. -Wl,--no-as-needed -lAnalysisFramework -lAnalysisObjects -lAnalysisUtilities -lBGCalc
+
+# Exe con tutte le funzionalità.
+# Esegui inserendo almeno una opzione di input ("input bragg_events.txt" oppure "sim <numberOfEvents> [seed]").
+# Esegui inserendo a piacere le opzioni di analisi:
+# "dump", "dist <token_name>", "bgcalc".
+# Ricordati di inserire l'opzione "ranges energyRanges" se usi
+# l'opzione statistica "dist <token_name>", per far sapere al
+# programma quali ranges di energia deve prendere per l'analisi.
+export EXE_NAME=runAll
+rm -f ${EXE_NAME}
+echo "build and link " ${EXE_NAME}
+c++ -Wall -fPIC -I. -o ${EXE_NAME} dum.cc -L. -Wl,--no-as-needed -lAnalysisFramework -lAnalysisObjects -lAnalysisUtilities -lBGCalc -lEventDump -lEnergyDist `root-config --libs`
+
+#####################################################################
+# Informazione sull'utilizzo delle librerie
+echo "Now make sure you add the path of this directory to LD_LIBRARY_PATH before you run the executables. Prompt: export LD_LIBRARY_PATH=${ANALYSIS_PATH}"

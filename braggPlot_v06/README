@@ -1,0 +1,64 @@
+  _____                 _____  ______          _____  __  __ ______ 
+  / ____|    _     _    |  __ \|  ____|   /\   |  __ \|  \/  |  ____|
+ | |       _| |_ _| |_  | |__) | |__     /  \  | |  | | \  / | |__   
+ | |      |_   _|_   _| |  _  /|  __|   / /\ \ | |  | | |\/| |  __|  
+ | |____    |_|   |_|   | | \ \| |____ / ____ \| |__| | |  | | |____ 
+  \_____|               |_|  \_\______/_/    \_\_____/|_|  |_|______|
+                                                                     
+Author: Michele Piccolini
+Program version: braggPlot06
+ _____ ________  _________ _____ _      _____ 
+/  __ \  _  |  \/  || ___ \_   _| |    |  ___|
+| /  \/ | | | .  . || |_/ / | | | |    | |__  
+| |   | | | | |\/| ||  __/  | | | |    |  __| 
+| \__/\ \_/ / |  | || |    _| |_| |____| |___ 
+ \____/\___/\_|  |_/\_|    \___/\_____/\____/ 
+To compile:
+execute the script "compile" with ./compile
+		
+Notes: The files will be compiled into several dynamic libraries.
+Several executables will be made: runAll, runDist, runBGCalc, runDump.
+In order to be able to run the files, make sure that the files
+bragg_events.txt and energyRanges are present in the same directory as
+the exectutables.
+Make sure also that this directory is included in the environment
+variable LD_LIBRARY_PATH. (Type the last command printed out by the
+run of the "compile" script in order to achieve this.)
+______ _   _ _   _ 
+| ___ \ | | | \ | |
+| |_/ / | | |  \| |
+|    /| | | | . ` |
+| |\ \| |_| | |\  |
+\_| \_|\___/\_| \_/
+To run:
+- runDist) Exe that supports only the option "dump", useful to print
+data.
+Run with: ./runDump input bragg_events.txt dump
+Or with: ./runDump sim <numberOfEvents> [seed] dump
+
+- runBGCalc) Exe that supports only the option "bgcalc", useful to compute
+the background energy level.
+Run with: ./runBGCalc input bragg_events.txt bgcalc
+Or with: ./runBGCalc sim <numberOfEvents> [seed] bgcalc
+
+- runDist) Exe that supports only the option "dist <token_name>", useful to 
+make statistics and to save histograms (.root files).
+The <token_name> can be any string. This will be the initial part
+of the names of the saved histograms. For example, if you type
+"dist h", the program will save the histograms: hBackground.root,
+hAfricium.root, hAustralium.root, hAsium.root, hHists.root, and
+hTotalEnergies.root. Do not insert token names as "h.root". "h" is enough.
+You must include also the option "ranges energyRanges" in this case,
+in order to make the program know where to read the energy ranges
+with which perform the statistics.
+Run with: ./runDump input bragg_events.txt ranges energyRanges dist <token_name>
+Or with: ./runDump sim <numberOfEvents> [seed] ranges energyRanges dist <token_name>
+
+- runAll) Exe with all functionalities.
+Run by typing at least one input option (i.e. "input bragg_events.txt"
+or "sim <numberOfEvents> [seed]").
+Run by inserting in command line any combination of options, among:
+"dump", "dist <token_name>", and "bgcalc".
+Remember to insert in the command line options the option "ranges energyRanges",
+if you chosed to include "dist <token_name>".
+

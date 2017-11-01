@@ -1,0 +1,53 @@
+  _____                 _____  ______          _____  __  __ ______ 
+  / ____|    _     _    |  __ \|  ____|   /\   |  __ \|  \/  |  ____|
+ | |       _| |_ _| |_  | |__) | |__     /  \  | |  | | \  / | |__   
+ | |      |_   _|_   _| |  _  /|  __|   / /\ \ | |  | | |\/| |  __|  
+ | |____    |_|   |_|   | | \ \| |____ / ____ \| |__| | |  | | |____ 
+  \_____|               |_|  \_\______/_/    \_\_____/|_|  |_|______|
+                                                                     
+Author: Michele Piccolini
+Program version: braggPlot04
+ _____ ________  _________ _____ _      _____ 
+/  __ \  _  |  \/  || ___ \_   _| |    |  ___|
+| /  \/ | | | .  . || |_/ / | | | |    | |__  
+| |   | | | | |\/| ||  __/  | | | |    |  __| 
+| \__/\ \_/ / |  | || |    _| |_| |____| |___ 
+ \____/\___/\_|  |_/\_|    \___/\_____/\____/ 
+To compile:
+g++ -Wall -std=c++11 `root-config --cflags` -o braggPlot04 *.cc `root-config --libs`
+		
+Notes: In order to be able to run the files, make sure that the file
+bragg_events.txt is present in the same directory as the exectutable.
+______ _   _ _   _ 
+| ___ \ | | | \ | |
+| |_/ / | | |  \| |
+|    /| | | | . ` |
+| |\ \| |_| | |\  |
+\_| \_|\___/\_| \_/
+To run:
+./braggPlot04 (...input options...) (...analysis options...)
+
+INPUT OPTIONS: (you must include exactly one of these options)
+1) INPUT FROM FILE
+Option: "input bragg_events.txt"
+The program read input events from the file bragg_events.txt.
+2) SIMULATED INPUT
+Option: sim <numberOfEvents> [seed]
+The program takes as input a number of simulated random events equal to numberOfEvents parameter.
+The random numbers are generated uniformly in the interval [0:99] using the seed parameter (optional).
+The interval can be changed in the constants.h file.
+
+ANALYSIS OPTIONS: (you must include at least one option. You can also include all of them, in any order.)
+1) DUMP DATA
+Option: "dump"
+The program displays on the screen the list of all the read (from file or simulated) energies.
+2) STATISTICS AND HISTOGRAMS
+Option: "dist <token_name>"
+The <token_name> can be any string. This will be the initial part
+of the names of the saved histograms. For example, if you type
+"dist h", the program will save the histograms: hBackground.root,
+hAfricium.root, hAustralium.root, hAsium.root, hHists.root. Do not insert token names as "h.root". "h" is enough.
+3) BACKGROUND LEVEL
+Option: "bgcalc"
+The program will compute and display the background energy level (average level of Bragg curves' tails).
+
